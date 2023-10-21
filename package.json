@@ -1,17 +1,53 @@
 {
+  "name": "ntu-cz4153-proj",
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "commit": "cz",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format:check": "prettier --check \"**/*.{html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}\"",
+    "format:fix": "prettier --write \"**/*.{html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}\"",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "prepare": "husky install"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*.{html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}": [
+      "prettier --write"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
+  },
+  "prettier": "@ck-oss/prettier-config",
+  "eslintConfig": {
+    "extends": [
+      "@ck-oss/eslint-config/node"
+    ]
   },
   "devDependencies": {
+    "@ck-oss/eslint-config": "^3.0.4",
+    "@ck-oss/prettier-config": "^1.0.5",
+    "@ck-oss/tsconfig": "^2.0.0",
+    "@commitlint/cli": "^18.0.0",
+    "@commitlint/config-conventional": "^18.0.0",
+    "@commitlint/cz-commitlint": "^18.0.0",
+    "@types/node": "^17.0.12",
+    "commitizen": "^4.3.0",
     "eslint": "^8.48.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.0.2",
     "prettier": "^3.0.3",
-    "tsconfig": "workspace:*",
-    "turbo": "latest"
+    "turbo": "latest",
+    "typescript": "^4.5.3"
   },
-  "packageManager": "pnpm@8.6.10",
-  "name": "ntu-cz4153-proj"
+  "packageManager": "pnpm@8.6.10"
 }
