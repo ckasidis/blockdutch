@@ -5,11 +5,8 @@
     "build": "turbo run build",
     "commit": "cz",
     "dev": "turbo run dev",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "format:check": "prettier --check \"**/*.{html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}\"",
     "format:fix": "prettier --write \"**/*.{html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}\"",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
     "prepare": "husky install"
   },
   "commitlint": {
@@ -28,11 +25,6 @@
     }
   },
   "prettier": "@ck-oss/prettier-config",
-  "eslintConfig": {
-    "extends": [
-      "@ck-oss/eslint-config/node"
-    ]
-  },
   "devDependencies": {
     "@ck-oss/eslint-config": "^3.0.4",
     "@ck-oss/prettier-config": "^1.0.5",
