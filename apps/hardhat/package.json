@@ -2,13 +2,16 @@
   "name": "hardhat",
   "version": "0.1.0",
   "private": true,
+  "files": [
+    "./artifacts"
+  ],
   "scripts": {
     "compile": "hardhat compile",
-    "deploy": "hardhat run scripts/deploy.ts",
+    "deploy:dev": "dotenv -- hardhat run scripts/deploy.ts --network localhost",
+    "dev": "dotenv -- hardhat node",
     "help": "hardhat help",
-    "node": "dotenv -- hardhat node",
-    "test": "hardhat test",
-    "test:report-gas": "REPORT_GAS=true hardhat test"
+    "test": "dotenv -- hardhat test",
+    "test:report-gas": "dotenv -- REPORT_GAS=true hardhat test"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",

@@ -5,8 +5,8 @@
     "build": "turbo run build",
     "commit": "cz",
     "dev": "turbo run dev",
-    "format:check": "prettier --check \"**/*.{html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}\"",
-    "format:fix": "prettier --write \"**/*.{html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}\"",
+    "format:check": "prettier --check \"**/*.{sol,html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}\"",
+    "format:fix": "prettier --write \"**/*.{sol,html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}\"",
     "prepare": "husky install"
   },
   "commitlint": {
@@ -15,7 +15,7 @@
     ]
   },
   "lint-staged": {
-    "*.{html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}": [
+    "*.{sol,html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}": [
       "prettier --write"
     ]
   },
@@ -24,7 +24,6 @@
       "path": "@commitlint/cz-commitlint"
     }
   },
-  "prettier": "@ck-oss/prettier-config",
   "devDependencies": {
     "@ck-oss/eslint-config": "^3.0.4",
     "@ck-oss/prettier-config": "^1.0.5",
@@ -38,6 +37,7 @@
     "husky": "^8.0.0",
     "lint-staged": "^15.0.2",
     "prettier": "^3.0.3",
+    "prettier-plugin-solidity": "^1.1.3",
     "turbo": "latest",
     "typescript": "^4.5.3"
   },
