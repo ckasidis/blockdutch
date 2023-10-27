@@ -1,11 +1,13 @@
-import { ClerkProvider } from "@clerk/nextjs";
-import clsx from "clsx";
+import { clsx } from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "sonner";
+
+import { Providers } from "./providers";
 
 import "@/styles/globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "BlockDutch",
@@ -18,10 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en" className="h-full bg-white">
-        <body className={clsx(inter.className, "h-full")}>{children}</body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" className={clsx("dark", inter.variable)}>
+      <body>
+        <Providers>{children}</Providers>
+        <Toaster richColors />
+      </body>
+    </html>
   );
 }

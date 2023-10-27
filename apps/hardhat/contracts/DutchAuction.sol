@@ -14,18 +14,22 @@ contract DutchAuction {
 
     uint256 private _startTime;
     uint256 private constant _duration = 20 minutes;
+
+    // Keep track of token distribution status
     bool private _tokensDistributed = false;
 
     // Reentrancy guard
     bool private _locked = false;
 
-    // Store bids, total commitment, last bid to evaluate clearing price and distribute tokens
     struct Bid {
         address bidder;
         uint256 commitment;
     }
+
+    // Keep track of bids, commitments, last bid to evaluate clearing price and distribute tokens
     Bid[] private _bids;
     uint256 private _totalCommitment = 0;
+    mapping(address => uint256) private _commitmentByBidder;
     uint256 private _lastBid;
 
     constructor(
@@ -69,6 +73,10 @@ contract DutchAuction {
         return _token;
     }
 
+    function getCreator() external view returns (address) {
+        return _creator;
+    }
+
     function getTotalSupply() external view returns (uint256) {
         return _totalSupply;
     }
@@ -93,7 +101,17 @@ contract DutchAuction {
         return _tokensDistributed;
     }
 
-    // Functions for Dutch Auction logic
+    function getTotalCommitment() external view returns (uint256) {
+        return _totalCommitment;
+    }
+
+    function getCommitmentByBidder(
+        address bidder
+    ) external view returns (uint256) {
+        return _commitmentByBidder[bidder];
+    }
+
+    // Punlic functions for dutch auction logic
     function getCurrentPrice() public view returns (uint256) {
         if (block.timestamp < _startTime) {
             return _startPrice;
@@ -106,15 +124,15 @@ contract DutchAuction {
         }
     }
 
-    function auctionEnded() public view returns (bool) {
+    function getAuctionEnded() public view returns (bool) {
         return
+            block.timestamp >= _startTime + _duration ||
             (_totalCommitment * 10 ** _token.decimals()) / getCurrentPrice() >=
-            _totalSupply ||
-            getCurrentPrice() == _reservedPrice;
+            _totalSupply;
     }
 
     function getClearingPrice() public view returns (uint256) {
-        require(auctionEnded(), "Auction not ended yet");
+        require(getAuctionEnded(), "Auction not ended yet");
 
         // Sell at reserved price
         if (
@@ -135,6 +153,7 @@ contract DutchAuction {
         }
     }
 
+    // External functions for Dutch Auction logic
     function getRemainingSupply() external view returns (uint256) {
         uint256 currentDemand = (_totalCommitment * 10 ** _token.decimals()) /
             getCurrentPrice();
@@ -147,20 +166,21 @@ contract DutchAuction {
     }
 
     function placeBid() external payable nonReentrant {
-        require(!auctionEnded(), "Auction ended");
+        require(!getAuctionEnded(), "Auction ended");
 
         // Save last bid price
         _lastBid = getCurrentPrice();
 
         // Add total commitment
         _totalCommitment += msg.value;
+        _commitmentByBidder[msg.sender] += msg.value;
 
         // Save bid
         _bids.push(Bid({bidder: msg.sender, commitment: msg.value}));
     }
 
     function distributeTokens() external nonReentrant {
-        require(auctionEnded(), "Auction not ended yet");
+        require(getAuctionEnded(), "Auction not ended yet");
         require(!_tokensDistributed, "Tokens already distributed");
 
         uint256 tokensToDistribute = _totalSupply;

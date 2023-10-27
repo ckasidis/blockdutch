@@ -1,5 +1,5 @@
-import { ethers } from "hardhat";
 import { expect } from "chai";
+import { ethers } from "hardhat";
 import { AuctionToken, DutchAuction } from "../typechain-types";
 
 describe("DutchAuction", function () {
@@ -54,7 +54,7 @@ describe("DutchAuction", function () {
     await ethers.provider.send("evm_mine");
 
     // Auction Ended
-    expect(await auction.auctionEnded()).to.equal(true);
+    expect(await auction.getAuctionEnded()).to.equal(true);
 
     await auction.distributeTokens();
 
@@ -71,8 +71,6 @@ describe("DutchAuction", function () {
     const bidder1Tokens = await token.balanceOf(bidder1.address);
     const bidder2Tokens = await token.balanceOf(bidder2.address);
     const auctionContractTokens = await token.balanceOf(auctionAddress);
-
-    console.log(bidder1Tokens, bidder2Tokens, auctionContractTokens);
 
     // bidders received tokens
     expect(bidder1Tokens).to.gt(0);

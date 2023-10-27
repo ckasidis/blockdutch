@@ -8,7 +8,7 @@
   "scripts": {
     "compile": "hardhat compile",
     "deploy:dev": "dotenv -- hardhat run scripts/deploy.ts --network localhost",
-    "dev": "dotenv -- hardhat node",
+    "dev": "NODE_ENV=development dotenv -- hardhat node",
     "help": "hardhat help",
     "test": "dotenv -- hardhat test",
     "test:report-gas": "dotenv -- REPORT_GAS=true hardhat test"
