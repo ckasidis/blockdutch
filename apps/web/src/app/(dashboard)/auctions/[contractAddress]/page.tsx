@@ -18,9 +18,8 @@ import { toast } from "sonner";
 import { formatEther } from "viem";
 import { useAccount } from "wagmi";
 
-import { PlaceBidModal } from "./place-bid-modal";
-
 import { PageHeading } from "@/components/page-heading";
+import { PlaceBidModal } from "@/components/place-bid-modal";
 import {
   useAuctionTokenBalanceOf,
   useAuctionTokenName,
@@ -40,7 +39,7 @@ import {
   useDutchAuctionGetTotalSupply,
 } from "@/generated";
 import { useCountdown } from "@/hooks/use-countdown";
-import { formatCountdown } from "@/utils/countdown";
+import { formatCountdown } from "@/lib/utils/countdown";
 
 export default function AuctionPage() {
   // Get contract address
@@ -53,76 +52,63 @@ export default function AuctionPage() {
   const { data: tokenAddress } = useDutchAuctionGetToken({
     address: contractAddress as `0x${string}`,
   });
-
   const { data: tokenName } = useAuctionTokenName({
     address: tokenAddress,
   });
-
   const { data: tokenSymbol } = useAuctionTokenSymbol({
     address: tokenAddress,
   });
 
-  // Static
+  // Static data
   const { data: totalSupply } = useDutchAuctionGetTotalSupply({
     address: contractAddress as `0x${string}`,
   });
-
   const { data: startPrice } = useDutchAuctionGetStartPrice({
     address: contractAddress as `0x${string}`,
   });
-
   const { data: reservedPrice } = useDutchAuctionGetReservedPrice({
     address: contractAddress as `0x${string}`,
   });
-
   const { data: startTime } = useDutchAuctionGetStartTime({
     address: contractAddress as `0x${string}`,
   });
-
   const startTimeDate = useMemo(() => {
     return new Date(Number(startTime) * 1000);
   }, [startTime]);
-
   const { data: duration } = useDutchAuctionGetDuration({
     address: contractAddress as `0x${string}`,
   });
 
-  // Needs refetch
+  // Dynamic data - Needs refetch
   const { data: myTokens, refetch: balanceOfRefetch } =
     useAuctionTokenBalanceOf({
       args: [address!],
       address: tokenAddress,
       enabled: Boolean(address),
     });
-
   const { data: tokensDistributed, refetch: tokensDistributedRefetch } =
     useDutchAuctionGetTokensDistributed({
       address: contractAddress as `0x${string}`,
     });
-
   const { data: commitmentByBidder, refetch: commitmentByBidderRefetch } =
     useDutchAuctionGetCommitmentByBidder({
       args: [address!],
       address: contractAddress as `0x${string}`,
       enabled: Boolean(address),
     });
-
   const { data: currentPrice, refetch: currentPriceRefetch } =
     useDutchAuctionGetCurrentPrice({
       address: contractAddress as `0x${string}`,
     });
-
   const { data: auctionEnded, refetch: auctionEndedRefetch } =
     useDutchAuctionGetAuctionEnded({
       address: contractAddress as `0x${string}`,
     });
-
   const { data: clearingPrice, refetch: clearingPriceRefetch } =
     useDutchAuctionGetClearingPrice({
       address: contractAddress as `0x${string}`,
       enabled: auctionEnded,
     });
-
   const { data: remainingSupply, refetch: RemainingSupplyRefetch } =
     useDutchAuctionGetRemainingSupply({
       address: contractAddress as `0x${string}`,
@@ -154,6 +140,19 @@ export default function AuctionPage() {
     RemainingSupplyRefetch();
   };
 
+  // loading state
+  if (
+    !contractAddress ||
+    auctionEnded === undefined ||
+    tokensDistributed === undefined
+  ) {
+    return (
+      <Card>
+        <CardBody>Auction not found</CardBody>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-10">
       <div className="space-y-5">
@@ -169,6 +168,7 @@ export default function AuctionPage() {
             Browse Auctions
           </Link>
         </nav>
+
         <PageHeading
           primaryAction={
             auctionEnded ? (
@@ -179,9 +179,14 @@ export default function AuctionPage() {
                 {tokensDistributed ? "Tokens Distributed" : "Distribute Tokens"}
               </Button>
             ) : (
-              contractAddress && (
+              currentPrice !== undefined &&
+              remainingSupply !== undefined && (
                 <PlaceBidModal
                   contractAddress={contractAddress as `0x${string}`}
+                  currentPrice={currentPrice}
+                  auctionEnded={auctionEnded}
+                  remainingSupply={remainingSupply}
+                  refetch={refetch}
                   isOpen={isOpen}
                   onOpen={onOpen}
                   onOpenChange={onOpenChange}
@@ -253,31 +258,31 @@ export default function AuctionPage() {
             ),
           },
           {
-            name: "My Commitment",
+            name: tokensDistributed
+              ? "Net Commitment (after refund)"
+              : "Total Commitment",
             element:
               commitmentByBidder !== undefined &&
               `${(+formatEther(commitmentByBidder)).toFixed(4)} ethers`,
           },
           {
-            name:
-              auctionEnded && tokensDistributed
-                ? "Tokens Received"
-                : "Tokens to receive (estimated)",
-            element:
-              auctionEnded && tokensDistributed
-                ? myTokens !== undefined &&
-                  `${(+formatEther(myTokens)).toFixed(4)} tokens`
-                : auctionEnded
-                ? commitmentByBidder !== undefined &&
-                  clearingPrice !== undefined &&
-                  `${Number(commitmentByBidder / clearingPrice).toFixed(
-                    4,
-                  )} tokens`
-                : commitmentByBidder !== undefined &&
-                  currentPrice !== undefined &&
-                  `${Number(commitmentByBidder / currentPrice).toFixed(
-                    4,
-                  )} tokens`,
+            name: tokensDistributed
+              ? "Tokens Received"
+              : "Tokens to receive (estimated)",
+            element: tokensDistributed
+              ? myTokens !== undefined &&
+                `${(+formatEther(myTokens)).toFixed(4)} tokens`
+              : auctionEnded
+              ? commitmentByBidder !== undefined &&
+                clearingPrice !== undefined &&
+                `${Number(commitmentByBidder / clearingPrice).toFixed(
+                  4,
+                )} tokens`
+              : commitmentByBidder !== undefined &&
+                currentPrice !== undefined &&
+                `${Number(commitmentByBidder / currentPrice).toFixed(
+                  4,
+                )} tokens`,
           },
         ]}
       />
@@ -325,12 +330,11 @@ export default function AuctionPage() {
                 unit: "tokens",
               },
               {
-                name:
-                  auctionEnded && tokensDistributed
-                    ? "Supply Burned"
-                    : auctionEnded
-                    ? "Supply to be burned"
-                    : "Remaining Supply",
+                name: tokensDistributed
+                  ? "Supply Burned"
+                  : auctionEnded
+                  ? "Supply to be burned"
+                  : "Remaining Supply",
                 stat: remainingSupply,
                 unit: "tokens",
                 highlighted: true,

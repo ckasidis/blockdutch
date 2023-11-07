@@ -19,7 +19,7 @@ import { ConnectWalletModal } from "./connect-wallet-modal";
 import { DarkLogo } from "./logo";
 
 import { mainNavigation } from "@/lib/navigation/config";
-import { getBasePath } from "@/utils/base-path";
+import { getBasePath } from "@/lib/utils/base-path";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -4,7 +4,7 @@ import { NextUIProvider } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { WagmiConfig } from "wagmi";
 
-import { config } from "@/lib/wagmi/config";
+import { config } from "@/wagmi";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);

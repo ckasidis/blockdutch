@@ -14,11 +14,12 @@ import {
 } from "@nextui-org/react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { useAccount } from "wagmi";
 
 import { CreateAuctionModal } from "@/components/create-auction-modal";
 import { PageHeading } from "@/components/page-heading";
 import {
-  useAuctionFactoryGetAllAuctions,
+  useAuctionFactoryGetAuctionsByCreator,
   useAuctionTokenName,
   useAuctionTokenSymbol,
   useDutchAuctionGetAuctionEnded,
@@ -30,9 +31,14 @@ import {
 import { useCountdown } from "@/hooks/use-countdown";
 import { formatCountdown } from "@/lib/utils/countdown";
 
-export default function AuctionsPage() {
+export default function MyAuctionsPage() {
   const [showEnded, setShowEnded] = useState(false);
-  const { data, refetch } = useAuctionFactoryGetAllAuctions();
+
+  const { address } = useAccount();
+
+  const { data, refetch } = useAuctionFactoryGetAuctionsByCreator({
+    args: [address as `0x{string}`],
+  });
 
   // Modal Control
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -57,7 +63,7 @@ export default function AuctionsPage() {
           </Button>
         }
       >
-        Browse Auctions
+        My Auctions
       </PageHeading>
       <Checkbox isSelected={showEnded} onValueChange={setShowEnded}>
         Show ended auctions

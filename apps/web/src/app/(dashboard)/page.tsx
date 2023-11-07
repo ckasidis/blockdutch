@@ -1,5 +1,5 @@
-import { PageHeading } from "@/components/page-heading";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <PageHeading>Dashboard</PageHeading>;
+  redirect("/auctions");
 }

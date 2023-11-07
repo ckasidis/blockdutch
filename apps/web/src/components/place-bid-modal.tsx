@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowPathIcon } from "@heroicons/react/20/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Modal,
@@ -13,7 +14,7 @@ import {
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { parseEther } from "viem";
+import { formatEther, parseEther } from "viem";
 import { z } from "zod";
 
 import { useDutchAuctionPlaceBid } from "@/generated";
@@ -39,12 +40,19 @@ const placeBidSchema = z.object({
 
 export function PlaceBidModal({
   contractAddress,
+  currentPrice,
+  auctionEnded,
   isOpen,
+  refetch,
   onOpen,
   onOpenChange,
 }: {
   contractAddress: `0x${string}`;
+  currentPrice: bigint;
+  auctionEnded: boolean;
+  remainingSupply: bigint;
   isOpen: boolean;
+  refetch: () => void;
   onOpen: () => void;
   onOpenChange: () => void;
 }) {
@@ -52,6 +60,7 @@ export function PlaceBidModal({
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors, isValid, isSubmitting },
   } = useForm<z.infer<typeof placeBidSchema>>({
     resolver: zodResolver(placeBidSchema),
@@ -104,28 +113,47 @@ export function PlaceBidModal({
                     errorMessage={
                       errors.commitment?.message && errors.commitment.message
                     }
+                    description={
+                      auctionEnded
+                        ? "Auction has ended"
+                        : currentPrice !== undefined &&
+                          ` Estimated tokens to receive = ${Number(
+                            getValues("commitment") /
+                              +formatEther(currentPrice),
+                          ).toFixed(4)} tokens`
+                    }
                     {...register("commitment", {
                       valueAsNumber: true,
                     })}
                   />
                 </ModalBody>
-                <ModalFooter>
+                <ModalFooter className="flex-col justify-between gap-2 sm:flex-row">
                   <Button
                     type="button"
-                    color="danger"
+                    onClick={() => refetch()}
+                    startContent={<ArrowPathIcon className="h-4 w-4" />}
                     variant="light"
-                    onClick={onClose}
                   >
-                    Close
+                    Refresh
                   </Button>
-                  <Button
-                    type="submit"
-                    isDisabled={!isValid}
-                    isLoading={isSubmitting}
-                    color="secondary"
-                  >
-                    Place Bid
-                  </Button>
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <Button
+                      type="button"
+                      onClick={onClose}
+                      color="danger"
+                      variant="light"
+                    >
+                      Close
+                    </Button>
+                    <Button
+                      type="submit"
+                      isDisabled={!isValid}
+                      isLoading={isSubmitting}
+                      color="secondary"
+                    >
+                      Place Bid
+                    </Button>
+                  </div>
                 </ModalFooter>
               </form>
             </>
