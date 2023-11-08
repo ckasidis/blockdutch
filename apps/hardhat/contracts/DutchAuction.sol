@@ -111,7 +111,7 @@ contract DutchAuction {
         return _commitmentByBidder[bidder];
     }
 
-    // Pulic functions for dutch auction logic
+    // Public functions for dutch auction logic
     function getCurrentPrice() public view returns (uint256) {
         if (block.timestamp < _startTime) {
             return _startPrice;
