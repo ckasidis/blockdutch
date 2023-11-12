@@ -1,13 +1,18 @@
-# Sample Hardhat Project
+# BlockDutch Hardhat
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+### Important available commands in this directory
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+```sh
+# compile smart contracts developed with hardhat
+npm run compile
+# deploy Auction Factory contract to local hardhat network
+npm run deploy:local
+# deploy Auction Factory contract to Sepolia testnet
+npm run deploy:sepolia
+# start local hardhat network
+npm run node
+# test smart contracts
+npm run test
+# test smart contracts with gas report
+npm run test:report-gas
 ```
