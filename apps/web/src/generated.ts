@@ -74,7 +74,7 @@ export const auctionFactoryABI = [
 ] as const
 
 export const auctionFactoryAddress =
-  '0xE44f3f3351895CE57Ee1f20CBa4D4934D3F54D59' as const
+  '0x5FbDB2315678afecb367f032d93F642f64180aa3' as const
 
 export const auctionFactoryConfig = {
   address: auctionFactoryAddress,
