@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "npm run generate && dotenv -e ../../.env -- next build",
-    "dev": "npm run generate && dotenv -e ../../.env -- next dev",
+    "build": "dotenv -e ../../.env -- next build",
+    "dev": "dotenv -e ../../.env -- next dev",
     "generate": "dotenv -e ../../.env -- wagmi generate",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
