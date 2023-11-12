@@ -74,7 +74,7 @@ export const auctionFactoryABI = [
 ] as const
 
 export const auctionFactoryAddress =
-  '0x5FbDB2315678afecb367f032d93F642f64180aa3' as const
+  '0xE44f3f3351895CE57Ee1f20CBa4D4934D3F54D59' as const
 
 export const auctionFactoryConfig = {
   address: auctionFactoryAddress,
@@ -274,6 +274,44 @@ export const dutchAuctionABI = [
       { name: 'reservedPrice', internalType: 'uint256', type: 'uint256' },
       { name: 'creator', internalType: 'address', type: 'address' },
     ],
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'recipient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'RefundFailed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'recipient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'TransferFailed',
   },
   {
     stateMutability: 'nonpayable',
@@ -1487,4 +1525,51 @@ export function usePrepareDutchAuctionPlaceBid(
     functionName: 'placeBid',
     ...config,
   } as UsePrepareContractWriteConfig<typeof dutchAuctionABI, 'placeBid'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link dutchAuctionABI}__.
+ */
+export function useDutchAuctionEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof dutchAuctionABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: dutchAuctionABI,
+    ...config,
+  } as UseContractEventConfig<typeof dutchAuctionABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link dutchAuctionABI}__ and `eventName` set to `"RefundFailed"`.
+ */
+export function useDutchAuctionRefundFailedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof dutchAuctionABI, 'RefundFailed'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: dutchAuctionABI,
+    eventName: 'RefundFailed',
+    ...config,
+  } as UseContractEventConfig<typeof dutchAuctionABI, 'RefundFailed'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link dutchAuctionABI}__ and `eventName` set to `"TransferFailed"`.
+ */
+export function useDutchAuctionTransferFailedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof dutchAuctionABI, 'TransferFailed'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: dutchAuctionABI,
+    eventName: 'TransferFailed',
+    ...config,
+  } as UseContractEventConfig<typeof dutchAuctionABI, 'TransferFailed'>)
 }

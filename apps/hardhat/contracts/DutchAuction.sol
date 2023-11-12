@@ -32,6 +32,9 @@ contract DutchAuction {
     mapping(address => uint256) private _commitmentByBidder;
     uint256 private _lastBid;
 
+    event RefundFailed(address recipient, uint256 amount);
+    event TransferFailed(address recipient, uint256 amount);
+
     constructor(
         string memory tokenName,
         string memory tokenSymbol,
@@ -199,15 +202,18 @@ contract DutchAuction {
             uint256 refund = _bids[i].commitment - cost;
 
             if (refund > 0) {
-                payable(_bids[i].bidder).transfer(refund);
+                bool sent = payable(_bids[i].bidder).send(refund);
+                if (!sent) {
+                    emit RefundFailed(_bids[i].bidder, refund);
+                }
             }
 
             // Update supply and transfer ERC20 tokens to bidder
             tokensToDistribute -= tokensPurchased;
-            require(
-                _token.transfer(_bids[i].bidder, tokensPurchased),
-                "Token transfer failed"
-            );
+            bool transfered = _token.transfer(_bids[i].bidder, tokensPurchased);
+            if (!transfered) {
+                emit TransferFailed(_bids[i].bidder, tokensPurchased);
+            }
         }
 
         // Burn remaining tokens
