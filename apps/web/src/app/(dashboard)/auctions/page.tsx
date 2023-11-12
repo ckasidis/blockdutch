@@ -83,7 +83,7 @@ export default function AuctionsPage() {
   );
 }
 
-export function AuctionCard({
+function AuctionCard({
   contractAddress,
   showEnded,
 }: {
@@ -172,7 +172,7 @@ export function AuctionCard({
   );
 }
 
-export function TokenMetadata({
+function TokenMetadata({
   contractAddress,
 }: {
   contractAddress: `0x${string}`;

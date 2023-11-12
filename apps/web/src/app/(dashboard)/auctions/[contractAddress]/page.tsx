@@ -354,7 +354,7 @@ export default function AuctionPage() {
   );
 }
 
-export function AuctionDetailsSection({
+function AuctionDetailsSection({
   items,
 }: {
   items: {
@@ -376,7 +376,7 @@ export function AuctionDetailsSection({
   );
 }
 
-export function StatCardsSection({
+function StatCardsSection({
   title,
   items,
 }: {
@@ -400,7 +400,7 @@ export function StatCardsSection({
   );
 }
 
-export function StatCard({
+function StatCard({
   name,
   stat,
   unit,
