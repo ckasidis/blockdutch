@@ -7,10 +7,18 @@
   "scripts": {
     "build": "turbo run build",
     "commit": "cz",
+    "compile": "turbo run compile",
+    "deploy:local": "turbo run deploy:local",
+    "deploy:sepolia": "turbo run deploy:sepolia",
     "dev": "turbo run dev",
     "format:check": "prettier --check \"**/*.{sol,html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}\"",
     "format:fix": "prettier --write \"**/*.{sol,html,css,scss,js,cjs,mjs,jsx,ts,tsx,md,markdown,mdx,json,yml,yaml,gql,graphql}\"",
-    "prepare": "husky install"
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "node": "turbo run node",
+    "prepare": "husky install",
+    "test": "turbo run test",
+    "test:report-gas": "turbo run test:report-gas"
   },
   "commitlint": {
     "extends": [

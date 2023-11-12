@@ -10,6 +10,7 @@ async function main() {
 
   await auctionFactory.waitForDeployment();
 
+  console.log("**Auction Factory Address**");
   console.log(await auctionFactory.getAddress());
 }
 

@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
-    "dev": "next dev",
-    "generate": "wagmi generate",
+    "build": "npm run generate && dotenv -e ../../.env -- next build",
+    "dev": "npm run generate && dotenv -e ../../.env -- next dev",
+    "generate": "dotenv -e ../../.env -- wagmi generate",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "start": "next start"
+    "start": "dotenv -e ../../.env -- next start"
   },
   "eslintConfig": {
     "extends": [
@@ -38,6 +38,7 @@
     "@types/react-dom": "^18",
     "@wagmi/cli": "^1.5.2",
     "autoprefixer": "^10",
+    "dotenv-cli": "^7.3.0",
     "postcss": "^8",
     "tailwindcss": "^3"
   }

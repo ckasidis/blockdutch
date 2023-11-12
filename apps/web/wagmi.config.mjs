@@ -10,7 +10,7 @@ export default defineConfig({
     {
       name: "auctionFactory",
       abi: AuctionFactoryAbi.abi,
-      address: "0x060387d336c98C4A212Ca706A4464F391F2a74BB",
+      address: process.env.NEXT_PUBLIC_AUCTION_FACTORY_ADDRESS,
     },
     {
       name: "dutchAuction",

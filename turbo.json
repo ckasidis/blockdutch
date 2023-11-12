@@ -1,15 +1,31 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
+  "globalDependencies": ["**/.env"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
-    "lint": {},
     "dev": {
       "cache": false,
       "persistent": true
-    }
+    },
+    "lint": {},
+    "lint:fix": {},
+    "compile": {
+      "cache": false
+    },
+    "deploy:local": {
+      "cache": false
+    },
+    "deploy:sepolia": {
+      "cache": false
+    },
+    "node": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {},
+    "test:report-gas": {}
   }
 }
