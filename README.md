@@ -4,10 +4,14 @@
 
 This is a Dev Project submission for NTU CX4153 Blockchain Technology course
 
+![BlockDutch Smart Contracts](./BlockDutch_Architecture.png)
+
 ## 2. Project Structure
 
 - `apps` directory
   - `apps/hardhat` = Hardhat project for developing and deploying smart contracts
+    - `apps/hardhat/contracts` = Smart contracts written in Solidity
+    - `apps/hardhat/test` = Tests written with ethers and chai
   - `apps/web` = Next.js frontend for interacting with smart contracts
 
 ## 3. How to interact with our deployed frontend in Sepolia testnet
@@ -40,7 +44,7 @@ npm run compile
     ```sh
     npm run node
     ```
-2.  deploy the Auction Factory contract to local hardhat network by running the following command in the root directory of this project:
+2.  In a new terminal session, deploy the Auction Factory contract to local hardhat network by running the following command in the root directory of this project:
     ```
     npm run deploy:local
     ```
